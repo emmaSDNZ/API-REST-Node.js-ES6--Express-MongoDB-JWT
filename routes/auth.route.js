@@ -2,10 +2,14 @@ import express from 'express'
 import { body } from "express-validator";
 import {
     register,
-    login
+    login,
+    infoUser,
+    refreshTokenCookie,
+    logout,
 } from '../controllers/auth.controller.js'
 
 import {validationResultExpress} from '../middlewares/validationResultExpress.js'
+import {requireToken} from '../middlewares/requireToken.js'
 
 
 const router = express.Router()
@@ -41,5 +45,11 @@ router.post('/login',[
 ],
 validationResultExpress,
 login)
+
+router.get('/protected', requireToken ,infoUser)
+
+router.get('/refresh', refreshTokenCookie)
+
+router.all('/logout', logout)
 
 export default router;
