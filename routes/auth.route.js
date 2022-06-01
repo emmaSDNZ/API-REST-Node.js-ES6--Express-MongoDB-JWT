@@ -1,5 +1,4 @@
 import express from 'express'
-import { body } from "express-validator";
 import {
     register,
     login,
@@ -7,48 +6,20 @@ import {
     refreshTokenCookie,
     logout,
 } from '../controllers/auth.controller.js'
-
-import {validationResultExpress} from '../middlewares/validationResultExpress.js'
 import {requireToken} from '../middlewares/requireToken.js'
+import { requireRefreshToken } from '../middlewares/requireRefreshToken.js';
+import { bodyRegisterValidator, bodyLoginValidator } from '../middlewares/validatorManager.js';
 
 
 const router = express.Router()
 
-router.post('/register',[
-    body("email", "Ingrese un email válido")
-    .trim()
-    .isEmail()
-    .normalizeEmail(),
-    body('password', 'Contraseña mínimo 4 carácteres')
-    .trim()
-    .isLength({ min: 4 }),
-    body('password', 'Credenciales invalidad')
-    .custom((value, { req }) => {
-        if (value !== req.body.repassword) {
-            throw new Error("No coinciden las contraseñas");
-        }
-        return value;
-    })
-],
-validationResultExpress,
-register)
+router.post('/register', bodyRegisterValidator, register)
 
-
-router.post('/login',[
-    body("email", "Ingrese un email válido")
-    .trim()
-    .isEmail()
-    .normalizeEmail(),
-    body('password', 'Contraseña mínimo 4 carácteres')
-    .trim()
-    .isLength({ min: 4 }),
-],
-validationResultExpress,
-login)
+router.post('/login', bodyLoginValidator, login)
 
 router.get('/protected', requireToken ,infoUser)
 
-router.get('/refresh', refreshTokenCookie)
+router.get('/refresh', requireRefreshToken ,refreshTokenCookie)
 
 router.all('/logout', logout)
 
