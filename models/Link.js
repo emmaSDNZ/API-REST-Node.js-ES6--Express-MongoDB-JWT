@@ -11,7 +11,7 @@ const linkSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    udi:{
+    uid:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,

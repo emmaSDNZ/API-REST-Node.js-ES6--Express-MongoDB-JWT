@@ -27,4 +27,4 @@ export  const tokenVerificationError = {
     "invalid token" : "Token no valido",
     "No Bearer" : "Utiliza forma Bearer",
     "jwt malformed": "JWT formato no valido"
-};
+}
